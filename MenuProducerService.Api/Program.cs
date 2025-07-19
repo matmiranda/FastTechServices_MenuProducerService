@@ -8,6 +8,9 @@ using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Adiciona o serviço de health check
+builder.Services.AddHealthChecks();
+
 // JWT Settings (caso queira configurar futuramente um validador próprio aqui)
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt")
@@ -80,6 +83,9 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// Mapeia o endpoint de health check
+app.MapHealthChecks("/menu-producer/health");
 
 
 app.UseSwagger();

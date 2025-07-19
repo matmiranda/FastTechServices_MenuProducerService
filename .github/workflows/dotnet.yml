@@ -42,8 +42,8 @@ jobs:
         run: |
           for i in {1..10}; do
             echo "Tentando acessar endpoint de health..."
-            curl -v http://localhost:5010/auth/health || true
-            if curl -f http://localhost:5010/auth/health > /dev/null 2>&1; then
+            curl -v http://localhost:5010/menu-producer/health || true
+            if curl -f http://localhost:5010/menu-producer/health > /dev/null 2>&1; then
               echo "API started successfully"
               exit 0
               fi
@@ -54,10 +54,10 @@ jobs:
             exit 1
 
       - name: Test API Health
-        run: curl -f http://localhost:5010/auth/health || exit 1
+        run: curl -f http://localhost:5010/menu-producer/health || exit 1
 
       - name: Test API Metrics
-        run: curl -f http://localhost:5010/auth/metrics || exit 1
+        run: curl -f http://localhost:5010/menu-producer/metrics || exit 1
 
       # - name: Run Unit Tests        
       #   run: dotnet test CriarContatos.Test/CriarContatos.Test.csproj --configuration Release --logger "console;verbosity=detailed"
