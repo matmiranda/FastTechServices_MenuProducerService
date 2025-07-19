@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: auth-persistent-volume-claim
+  labels:
+    app: auth
+    tier: backend
+  annotations:
+    description: "Claim para acessar o volume persistente do microsserviço auth"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: default
