@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-service
+  name: menu-producer-service
   labels:
-    app: auth
+    app: menu-producer
     tier: backend
     environment: production
   annotations:
-    description: "Service para expor o microsserviço auth"
+    description: "Service para expor o microsserviço menu-producer"
     prometheus.io/scrape: "true"
-    prometheus.io/path: "/auth/metrics"
+    prometheus.io/path: "/menu-producer/metrics"
     prometheus.io/port: "80"
 spec:
   type: LoadBalancer
   selector:
-    app: auth
+    app: menu-producer
   ports:
     - protocol: TCP
       port: 80
