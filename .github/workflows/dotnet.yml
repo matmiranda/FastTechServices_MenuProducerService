@@ -25,23 +25,17 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore dependencies
-        run: dotnet restore AuthService.sln
+        run: dotnet restore MenuProducerService.sln
 
       - name: Build
-        run: dotnet build AuthService.sln --configuration Release
-
-      - name: Set Environment Variables
-        run: |
-          echo "RABBITMQSETTINGS__HOST=localhost" >> $GITHUB_ENV
-          echo "RABBITMQSETTINGS__USERNAME=guest" >> $GITHUB_ENV
-          echo "RABBITMQSETTINGS__PASSWORD=guest" >> $GITHUB_ENV
+        run: dotnet build MenuProducerService.sln --configuration Release
 
       - name: Start API in Background
         env:
           ASPNETCORE_URLS: http://localhost:5010
         run: |
-          cd AuthService.Api/bin/Release/net9.0/
-          dotnet AuthService.Api.dll & disown
+          cd MenuProducerService.Api/bin/Release/net9.0/
+          dotnet MenuProducerService.Api.dll & disown
           sleep 5
 
       - name: Wait for API to Start
@@ -69,7 +63,7 @@ jobs:
       #   run: dotnet test CriarContatos.Test/CriarContatos.Test.csproj --configuration Release --logger "console;verbosity=detailed"
 
       - name: Publish
-        run: dotnet publish AuthService.Api/AuthService.Api.csproj --configuration Release --output AuthService.Api/publish
+        run: dotnet publish MenuProducerService.Api/MenuProducerService.Api.csproj --configuration Release --output MenuProducerService.Api/publish
 
       # --- Adicionando as etapas de Docker, ACR e AKS ---
       - name: Azure Login
@@ -101,7 +95,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/k8s:latest -f AuthService.Api/Dockerfile .
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/k8s:latest -f MenuProducerService.Api/Dockerfile .
 
       - name: Push Docker image to ACR
         run: |
@@ -116,20 +110,20 @@ jobs:
       - name: Update Kubernetes Resources
         run: |
           # Aplica ConfigMap (cria ou atualiza se necessário)
-          kubectl apply -f AuthService.Api/k8s/k8s-configmap.yml
+          kubectl apply -f MenuProducerService.Api/k8s/k8s-configmap.yml
 
           # Aplica Deployment (cria ou atualiza se necessário)
-          kubectl apply -f AuthService.Api/k8s/k8s-deployment.yml
+          kubectl apply -f MenuProducerService.Api/k8s/k8s-deployment.yml
 
           # Aplica PVC e PV (apenas cria ou atualiza, sem deletar)
-          kubectl apply -f AuthService.Api/k8s/k8s-persistent-volume.yml
-          kubectl apply -f AuthService.Api/k8s/k8s-persistent-volume-claim.yml
+          kubectl apply -f MenuProducerService.Api/k8s/k8s-persistent-volume.yml
+          kubectl apply -f MenuProducerService.Api/k8s/k8s-persistent-volume-claim.yml
 
           # Aplica Service (cria ou atualiza se necessário)
-          kubectl apply -f AuthService.Api/k8s/k8s-service.yml
+          kubectl apply -f MenuProducerService.Api/k8s/k8s-service.yml
 
           # Aplica o Ingress (cria ou atualiza o roteamento externo)
-          kubectl apply -f AuthService.Api/k8s/k8s-ingress.yml
+          kubectl apply -f MenuProducerService.Api/k8s/k8s-ingress.yml
 
           # Espera o rollout do Deployment para garantir que a atualização foi bem-sucedida
           kubectl rollout status deployment/auth-deployment
@@ -138,8 +132,8 @@ jobs:
         uses: azure/k8s-deploy@v1
         with:
           manifests: |
-            AuthService.Api/k8s/k8s-deployment.yml
-            AuthService.Api/k8s/k8s-service.yml
+            MenuProducerService.Api/k8s/k8s-deployment.yml
+            MenuProducerService.Api/k8s/k8s-service.yml
           images: |
             ${{ secrets.ACR_LOGIN_SERVER }}/k8s:latest
           # imagepullsecrets: |
