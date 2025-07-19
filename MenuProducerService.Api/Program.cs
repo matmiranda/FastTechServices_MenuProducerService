@@ -4,6 +4,7 @@ using MenuProducerService.Infrastructure.MessageBroker;
 using MenuProducerService.Infrastructure.Security;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,11 +81,13 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Adicionar middleware do Prometheus com endpoint customizado
+app.UseMetricServer("/menu-producer/metrics");
+app.UseHttpMetrics();
 
 app.UseHttpsRedirection();
 
