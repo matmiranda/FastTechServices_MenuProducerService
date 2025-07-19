@@ -7,47 +7,12 @@ spec:
   rules:
   - http:
       paths:
-      - path: /
+      - path: /menu-producer/health
         pathType: Prefix
         backend:
           service:
             name: menu-producer-service
             port:
               number: 80
-      # - path: /api/auth/login
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: auth-service
-      #       port:
-      #         number: 80
-      # - path: /api/auth/validate
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: auth-service
-      #       port:
-      #         number: 80
-      # - path: /auth/health
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: auth-service
-      #       port:
-      #         number: 80
-      # - path: /swagger
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: auth-service
-      #       port:
-      #         number: 80
-      # - path: /swagger/index.html
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: auth-service
-      #       port:
-      #         number: 80
 
 
