@@ -21,6 +21,7 @@ spec:
         environment: production
       annotations:
         description: "Pod do microsserviço menu-producer"
+        redeploy-timestamp: "{{timestamp}}"
     spec:
       containers:
         - name: menu-producer
