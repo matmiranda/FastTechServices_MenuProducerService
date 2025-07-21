@@ -82,6 +82,16 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Mapeia o endpoint de health check
@@ -96,6 +106,7 @@ app.UseMetricServer("/menu-producer/metrics");
 app.UseHttpMetrics();
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();

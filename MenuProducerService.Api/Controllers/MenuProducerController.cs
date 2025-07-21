@@ -1,5 +1,4 @@
-﻿// MenuProducerService.Api/Controllers/MenuProducerController.cs
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MenuProducerService.Application.DTOs;
 using MenuProducerService.Application.Interfaces;
@@ -22,8 +21,21 @@ namespace MenuProducerService.Api.Controllers
         public async Task<IActionResult> Post([FromBody] MenuItemRequest request)
         {
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            request.Action = "CREATE"; // <-- Define ação para criação
             await _menuProducerService.PublishMenuItemAsync(request, token);
             return Ok(new { message = "Item enviado com sucesso para a fila." });
         }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Put(Guid id, [FromBody] MenuItemRequest request)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            request.Id = id;
+            request.Action = "UPDATE"; // <-- Define ação para atualização
+            await _menuProducerService.PublishMenuItemAsync(request, token);
+            return Ok(new { message = "Item atualizado com sucesso na fila." });
+        }
+
     }
 }
