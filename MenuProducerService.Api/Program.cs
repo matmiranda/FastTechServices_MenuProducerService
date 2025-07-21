@@ -5,6 +5,7 @@ using MenuProducerService.Infrastructure.Security;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Prometheus;
+using MenuProducerService.Infrastructure.MessageBroker;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +18,18 @@ builder.Services.Configure<JwtSettings>(
 );
 
 // Registrar o AuthClient com HttpClient para validação do token via API externa
-builder.Services.AddHttpClient<IAuthClient, AuthClient>();
+builder.Services.AddHttpClient<IAuthClient, AuthClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["AuthService:BaseUrl"]);
+});
 
 // RabbitMQ Producer
+builder.Services.Configure<RabbitMQSettings>(
+    builder.Configuration.GetSection("RabbitMQ"));
+
 builder.Services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
+
+
 
 // Application Service
 builder.Services.AddScoped<IMenuProducerService, MenuProducerService.Application.Services.MenuProducerService>();
@@ -82,15 +91,6 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
 
 var app = builder.Build();
 
@@ -106,7 +106,6 @@ app.UseMetricServer("/menu-producer/metrics");
 app.UseHttpMetrics();
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();

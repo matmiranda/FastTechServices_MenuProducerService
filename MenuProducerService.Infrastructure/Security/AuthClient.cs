@@ -15,7 +15,8 @@ namespace MenuProducerService.Infrastructure.Security
         public async Task<bool> ValidateTokenAsync(string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.GetAsync("http://localhost:5010/api/auth/validate");
+            var response = await _httpClient.GetAsync("/api/auth/validate");
+
             return response.IsSuccessStatusCode;
         }
     }
