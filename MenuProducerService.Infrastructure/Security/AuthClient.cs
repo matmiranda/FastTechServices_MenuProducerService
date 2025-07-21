@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using System.Text.Json;
 
 namespace MenuProducerService.Infrastructure.Security
 {

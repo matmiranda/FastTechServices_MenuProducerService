@@ -5,6 +5,8 @@ using MenuProducerService.Infrastructure.Security;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Prometheus;
+using MenuProducerService.Infrastructure.Repository;
+using MenuProducerService.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ builder.Services.AddHealthChecks();
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt")
 );
+
+//Dapper Context
+builder.Services.AddSingleton<DapperContext>();
 
 // Registrar o AuthClient com HttpClient para validação do token via API externa
 builder.Services.AddHttpClient<IAuthClient, AuthClient>(client =>
@@ -28,7 +33,8 @@ builder.Services.Configure<RabbitMQSettings>(
 
 builder.Services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
 
-
+//repository
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 
 // Application Service
 builder.Services.AddScoped<IMenuProducerService, MenuProducerService.Application.Services.MenuProducerService>();
