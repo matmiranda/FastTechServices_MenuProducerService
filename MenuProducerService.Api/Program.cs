@@ -5,7 +5,6 @@ using MenuProducerService.Infrastructure.Security;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Prometheus;
-using MenuProducerService.Infrastructure.MessageBroker;
 
 var builder = WebApplication.CreateBuilder(args);
 
