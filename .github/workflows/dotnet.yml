@@ -95,11 +95,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/k8s:latest -f MenuProducerService.Api/Dockerfile .
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/menu-producer:latest -f MenuProducerService.Api/Dockerfile .
 
       - name: Push Docker image to ACR
         run: |
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/k8s:latest
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/menu-producer:latest
 
       - name: Set AKS context
         uses: azure/aks-set-context@v3
@@ -135,7 +135,7 @@ jobs:
             MenuProducerService.Api/k8s/k8s-deployment.yml
             MenuProducerService.Api/k8s/k8s-service.yml
           images: |
-            ${{ secrets.ACR_LOGIN_SERVER }}/k8s:latest
+            ${{ secrets.ACR_LOGIN_SERVER }}/menu-producer:latest
           # imagepullsecrets: |
           #   acr-menu-producer
 
