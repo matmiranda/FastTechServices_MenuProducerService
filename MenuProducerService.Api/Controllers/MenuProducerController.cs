@@ -36,6 +36,5 @@ namespace MenuProducerService.Api.Controllers
             await _menuProducerService.PublishMenuItemAsync(request, token);
             return Ok(new { message = "Item atualizado com sucesso na fila." });
         }
-
     }
 }

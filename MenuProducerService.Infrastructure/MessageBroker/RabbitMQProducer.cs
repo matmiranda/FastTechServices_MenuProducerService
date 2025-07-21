@@ -14,13 +14,12 @@ namespace MenuProducerService.Infrastructure.MessageBroker
         {
             var config = options.Value;
 
+
             var factory = new ConnectionFactory()
             {
                 HostName = config.Host,
                 UserName = config.Username,
                 Password = config.Password,
-                Port = 5672,
-                VirtualHost = config.VirtualHost
             };
 
             _connection = factory.CreateConnection();
