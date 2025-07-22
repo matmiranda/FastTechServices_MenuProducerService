@@ -27,7 +27,7 @@ namespace MenuProducerService.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "GERENTE")]
+        [Authorize]
         public async Task<IActionResult> Put(Guid id, [FromBody] MenuItemRequest request)
         {
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -38,7 +38,7 @@ namespace MenuProducerService.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "GERENTE")]
+        [Authorize]
         public async Task<IActionResult> Get(string id)
         {
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
