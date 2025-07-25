@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-namespace MenuProducerService.Application.DTOs
+namespace MenuProducerService.Application.Request
 {
     public class MenuItemRequest
     {
@@ -12,6 +13,8 @@ namespace MenuProducerService.Application.DTOs
         [RegularExpression("LANCHES|SOBREMESAS|BEBIDAS", ErrorMessage = "MealType deve ser LANCHES, SOBREMESAS ou BEBIDAS.")]
         public string MealType { get; set; } = string.Empty;
         public bool Available { get; set; } = true;
-        public string Action { get; set; } = "CREATE"; // CREATE or UPDATE
+        public string? Action { get; set; }
+        [JsonIgnore]
+        public required string Token { get; set; }
     }
 }
