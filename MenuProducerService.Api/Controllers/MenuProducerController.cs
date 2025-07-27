@@ -17,15 +17,15 @@ namespace MenuProducerService.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize(Roles = "GERENTE")]
         public async Task<IActionResult> Post([FromBody] MenuItemRequest request)
         {
-            await _menuProducerService.PublishMenuItemCreateAsync(request);
-            return Ok(new { message = "Item enviado com sucesso para a fila." });
+            return Ok(await _menuProducerService.PublishMenuItemCreateAsync(request));
         }
 
         [HttpPut]
         [Authorize]
+        [Authorize(Roles = "GERENTE")]
         public async Task<IActionResult> Put([FromBody] MenuItemRequest request)
         {
             await _menuProducerService.PublishMenuItemUpdateAsync(request);
@@ -48,13 +48,7 @@ namespace MenuProducerService.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _menuProducerService.GetAllMenuItemsAsync();
-
-            if (result == null || !result.Any())
-                return NotFound(new { message = "Nenhum item encontrado." });
-
-            return Ok(result);
+            return await _menuProducerService.GetAllMenuItemsAsync();
         }
-
     }
 }

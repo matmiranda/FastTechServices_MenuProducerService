@@ -1,11 +1,12 @@
 ﻿using MenuProducerService.Application.Interfaces;
 using MenuProducerService.Application.Request;
+using MenuProducerService.Application.Response;
 using MenuProducerService.Domain.Entities;
 using MenuProducerService.Infrastructure.MessageBroker;
 using MenuProducerService.Infrastructure.Repository;
 using MenuProducerService.Infrastructure.Security;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MenuProducerService.Application.Services
 {
@@ -28,22 +29,28 @@ namespace MenuProducerService.Application.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task PublishMenuItemCreateAsync(MenuItemRequest request)
+        public async Task<MenuItemResponse> PublishMenuItemCreateAsync(MenuItemRequest request)
         {
-            request.Action = "MENU_ITEM_REGISTERED";
-
-            await ValidateTokenAsync();
+            //await ValidateTokenAsync();
 
             await _rabbitMqProducer.PublishAsync(QueueNames.MenuItemRegistered, request);
+
+            return new MenuItemResponse
+            {
+                Message = "Item enviado com sucesso para a fila."
+            };
         }
 
-        public async Task PublishMenuItemUpdateAsync(MenuItemRequest request)
+        public async Task<MenuItemResponse> PublishMenuItemUpdateAsync(MenuItemRequest request)
         {
-            request.Action = "MENU_ITEM_UPDATE";
-
             await ValidateTokenAsync();
 
             await _rabbitMqProducer.PublishAsync(QueueNames.MenuItemUpdated, request);
+
+            return new MenuItemResponse
+            {
+                Message = "Item enviado com sucesso para a fila."
+            };
         }
 
         public async Task<MenuItem?> GetMenuItemByIdAsync(string id)
@@ -53,11 +60,14 @@ namespace MenuProducerService.Application.Services
             return await _menuRepository.GetMenuItemByIdAsync(id);
         }
 
-        public async Task<IEnumerable<MenuItem>?> GetAllMenuItemsAsync()
+        public async Task<IActionResult> GetAllMenuItemsAsync()
         {
-            await ValidateTokenAsync();
+            var items = await _menuRepository.GetAllMenuItemsAsync();
 
-            return await _menuRepository.GetAllMenuItemsAsync();
+            if (items == null || !items.Any())
+                return new NotFoundObjectResult(new { message = "Nenhum item encontrado." });
+
+            return new OkObjectResult(items);
         }
 
         public async Task ValidateTokenAsync()
@@ -76,6 +86,5 @@ namespace MenuProducerService.Application.Services
             if (!isValid)
                 throw new UnauthorizedAccessException("Token inválido.");
         }
-
     }
 }
