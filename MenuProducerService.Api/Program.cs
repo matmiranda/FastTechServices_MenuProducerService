@@ -7,6 +7,7 @@ using System.Text;
 using Prometheus;
 using MenuProducerService.Infrastructure.Repository;
 using MenuProducerService.Infrastructure.Database;
+using MenuProducerService.Infrastructure.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +110,8 @@ app.UseSwaggerUI();
 // Adicionar middleware do Prometheus com endpoint customizado
 app.UseMetricServer("/menu-producer/metrics");
 app.UseHttpMetrics();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
