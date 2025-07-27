@@ -17,28 +17,28 @@ namespace MenuProducerService.Api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "GERENTE")]
+        [Authorize(Roles = "GERENTE")]
         public async Task<IActionResult> Post([FromBody] MenuItemCreateRequest request)
         {
             return await _menuProducerService.PublishMenuItemCreateAsync(request);
         }
 
         [HttpPut]
-        //[Authorize(Roles = "GERENTE")]
+        [Authorize(Roles = "GERENTE")]
         public async Task<IActionResult> Put([FromBody] MenuItemUpdateRequest request)
         {
             return await _menuProducerService.PublishMenuItemUpdateAsync(request);
         }
 
         [HttpGet("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Get(long id)
         {
             return await _menuProducerService.GetMenuItemByIdAsync(id);
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             return await _menuProducerService.GetAllMenuItemsAsync();
