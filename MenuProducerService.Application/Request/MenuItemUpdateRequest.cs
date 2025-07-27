@@ -1,11 +1,13 @@
 ﻿using MenuProducerService.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace MenuProducerService.Application.Request
 {
-    public class MenuItemRequest
+    public class MenuItemUpdateRequest
     {
+        [Required(ErrorMessage = "O ID do item é obrigatório.")]
+        [Range(1, long.MaxValue, ErrorMessage = "O ID deve ser maior que zero.")]
+        public long Id { get; set; }
         [Required(ErrorMessage = "O nome é obrigatório.")]
         [MaxLength(150, ErrorMessage = "O nome deve ter no máximo 150 caracteres.")]
         public required string Name { get; set; }

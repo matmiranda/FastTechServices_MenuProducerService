@@ -1,6 +1,4 @@
 ﻿using MenuProducerService.Application.Request;
-using MenuProducerService.Application.Response;
-using MenuProducerService.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MenuProducerService.Application.Interfaces
@@ -8,10 +6,9 @@ namespace MenuProducerService.Application.Interfaces
     public interface IMenuProducerService
     {
         Task<IActionResult> GetAllMenuItemsAsync();
-        Task<MenuItemResponse> PublishMenuItemCreateAsync(MenuItemRequest request);
-
-        Task<MenuItemResponse> PublishMenuItemUpdateAsync(MenuItemRequest request);
-        Task<MenuItem?> GetMenuItemByIdAsync(string id);
+        Task<IActionResult> PublishMenuItemCreateAsync(MenuItemCreateRequest request);
+        Task<IActionResult> PublishMenuItemUpdateAsync(MenuItemUpdateRequest request);
+        Task<IActionResult> GetMenuItemByIdAsync(long id);
         Task ValidateTokenAsync();        
     }
 }

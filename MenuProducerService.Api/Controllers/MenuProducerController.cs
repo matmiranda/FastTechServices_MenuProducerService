@@ -18,34 +18,27 @@ namespace MenuProducerService.Api.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "GERENTE")]
-        public async Task<IActionResult> Post([FromBody] MenuItemRequest request)
+        public async Task<IActionResult> Post([FromBody] MenuItemCreateRequest request)
         {
-            return Ok(await _menuProducerService.PublishMenuItemCreateAsync(request));
+            return await _menuProducerService.PublishMenuItemCreateAsync(request);
         }
 
         [HttpPut]
-        [Authorize]
-        [Authorize(Roles = "GERENTE")]
-        public async Task<IActionResult> Put([FromBody] MenuItemRequest request)
+        //[Authorize(Roles = "GERENTE")]
+        public async Task<IActionResult> Put([FromBody] MenuItemUpdateRequest request)
         {
-            await _menuProducerService.PublishMenuItemUpdateAsync(request);
-            return Ok(new { message = "Item atualizado com sucesso na fila." });
+            return await _menuProducerService.PublishMenuItemUpdateAsync(request);
         }
 
         [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Get(string id)
+        //[Authorize]
+        public async Task<IActionResult> Get(long id)
         {
-            var result = await _menuProducerService.GetMenuItemByIdAsync(id);
-
-            if (result == null)
-                return NotFound(new { message = "Item não encontrado." });
-
-            return Ok(result);
+            return await _menuProducerService.GetMenuItemByIdAsync(id);
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetAll()
         {
             return await _menuProducerService.GetAllMenuItemsAsync();
