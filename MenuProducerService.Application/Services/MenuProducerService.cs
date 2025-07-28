@@ -15,7 +15,7 @@ namespace MenuProducerService.Application.Services
         private readonly IAuthClient _authClient;
         private readonly IMenuRepository _menuRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string MessageSent = "Item enviado com sucesso para a fila."
+        private readonly string MessageSent = "Item enviado com sucesso para a fila.";
 
         public MenuProducerService(
             IRabbitMQProducer rabbitMqProducer, 
